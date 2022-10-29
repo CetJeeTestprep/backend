@@ -1,0 +1,12 @@
+from datetime import datetime
+import string
+from pydantic import BaseModel
+
+class UserQuestionsModel(BaseModel):
+    id: str
+    userId: str
+    questionId: str
+    questionPaperIds: list
+    attempts: int
+    leastTimeTaken: datetime.time
+    mostTimeTaken: datetime.time
