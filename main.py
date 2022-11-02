@@ -1,5 +1,8 @@
 from flask import Flask, request
 from flask_restful import Api, Resource, reqparse, abort
+from models.question_paper import QuestionPaperServices
+
+from models.user import UserServices
 #from requests import request
 
 app = Flask(__name__)
@@ -41,6 +44,13 @@ class HelloWorld(Resource):
 
 
 api.add_resource(HelloWorld, "/helloworld/<string:name>")
+
+# api.add_resource(UserServices, "/users")
+# api.add_resource(UserServices, "/users/<string:userid>")
+
+# api.add_resource(QuestionPaperServices, "/users/<string:userid>/questionpapers")
+# api.add_resource(QuestionPaperServices, "/users/<string:userid>/questionpapers/results")
+# api.add_resource(QuestionPaperServices, "/users/<string:userid>/questionpapers/<string:questionpaperid>")
 
 if __name__ == "__main__":
     app.run(debug=True)
