@@ -53,4 +53,4 @@ api.add_resource(HelloWorld, "/helloworld/<string:name>")
 # api.add_resource(QuestionPaperServices, "/users/<string:userid>/questionpapers/<string:questionpaperid>")
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
