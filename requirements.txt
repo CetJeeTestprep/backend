@@ -1,0 +1,5 @@
+Flask==2.1.1
+Flask-RESTful==0.3.9
+requests==2.25.1
+pydantic==1.9.0
+flask-mongoengine==1.0.0

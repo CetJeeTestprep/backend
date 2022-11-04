@@ -61,4 +61,4 @@ api.add_resource(QuestionPaperServices, "/users/<string:userid>/questionpapers")
 #api.add_resource(ParticularQuestionPaperServices, "/users/<string:userid>/questionpapers/<string:questionpaperid>")
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True, host='0.0.0.0')
