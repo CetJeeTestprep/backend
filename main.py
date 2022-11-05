@@ -2,7 +2,10 @@ from flask import Flask, request
 from flask_restful import Api, Resource, reqparse, abort
 from services.question_paper import QuestionPaperServices
 from flask_mongoengine import MongoEngine
-from services.user import UserServices
+from services.user import UserServices, ParticularUserServices
+from services.result import ResultServices
+from services.exam import ExamServices
+from services.question_paper import QuestionPaperServices, ParticularQuestionPaperServices
 #from requests import request
 from config.parsers import classname_post_args
 
@@ -55,10 +58,11 @@ class HelloWorld(Resource):
 api.add_resource(HelloWorld, "/helloworld/<string:name>")
 
 api.add_resource(UserServices, "/users")
-#api.add_resource(ParticularUserServices, "/users/<string:userid>")
+api.add_resource(ParticularUserServices, "/users/<string:userid>")
 api.add_resource(QuestionPaperServices, "/users/<string:userid>/questionpapers")
-#api.add_resource(ResultServices, "/users/<string:userid>/questionpapers/results")
-#api.add_resource(ParticularQuestionPaperServices, "/users/<string:userid>/questionpapers/<string:questionpaperid>")
+api.add_resource(ParticularQuestionPaperServices, "/users/<string:userid>/questionpapers/<string:questionpaperid>")
+api.add_resource(ResultServices, "/users/<string:userid>/questionpapers/results")
+api.add_resource(ExamServices, "/users/<string:userid>/questionpapers/<string:questionpaperid>/attempting")
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')
