@@ -4,7 +4,7 @@ from flask_mongoengine import Document, BaseField
 
 class MongoQuestionPaperModel(Document):
 
-    id: str = BaseField(db_field='id', required=True, primary_key=True)
+    id: str = BaseField(db_field='id', primary_key=True)
     date: datetime = BaseField(db_field='date')
     difficulty: float = BaseField(db_field='difficutlty')
     

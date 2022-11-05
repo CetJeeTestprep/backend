@@ -3,7 +3,7 @@ import string
 from flask_mongoengine import Document, BaseField
 
 class MongoUserQuestionsModel(Document):
-    id: str = BaseField(db_field='id', required=True, primary_key=True)
+    id: str = BaseField(db_field='id', primary_key=True)
     userId: str = BaseField(db_field='user_id', required=True)
     questionId: str = BaseField(db_field='question_id', required=True)
     questionPaperIds: list = BaseField(db_field='question_paper_id')
