@@ -30,17 +30,20 @@ db = MongoEngine()
 db.init_app(app)
 api = Api(app)
 
-user = MongoUserModel(id='10')
-user.name = 'Test all'
-user.email = 'kashishmaru2001@gmail.com'
-user.password = '123456'
-user.save()
+# user = MongoUserModel(id='10')
+# user.name = 'Test all'
+# user.email = 'kashishmaru2001@gmail.com'
+# user.password = '123456'
+# user.save()
+#
+# questions = MongoQuestionPaperModel(id='0')
+# questions.exam = 'CET'
+# questions.save()
+#
+# user_question = MongoUserQuestionsModel(id='0-0')
+# user_question.userId = '0'
+# user_question.questionId = '0'
+# user_question.save()
 
-questions = MongoQuestionPaperModel(id='0')
-questions.exam = 'CET'
-questions.save()
-
-user_question = MongoUserQuestionsModel(id='0-0')
-user_question.userId = '0'
-user_question.questionId = '0'
-user_question.save()
+user = MongoUserModel.objects(id='10')
+print(user[0]['email'])

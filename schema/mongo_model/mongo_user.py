@@ -11,6 +11,8 @@ class MongoUserModel(Document):
     userType: str = BaseField(db_field='user_type', choices=USER_TYPE_CHOICES)    
     attemptedQuestionPapers: dict = BaseField(db_field='attempted_question_paper')
 
+
     meta = {
         'collection': 'users'
     }
+

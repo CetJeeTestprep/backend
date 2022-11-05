@@ -5,6 +5,17 @@
     <title>FlaskBlog</title>
 </head>
 <body>
+    {% extends "myproject/base.html" %}
+
+{% block extrascripts %}
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-mml-chtml.js">
+  </script>
+{% endblock extrascripts %}
+
+{% block content %}
+$$x=\frac{-b+\sqrt{b^2-4ac}}{2a}$$
+{% endblock content %}
    <h1>Welcome to FlaskBlog</h1>
 </body>
 </html>

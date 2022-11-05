@@ -12,5 +12,5 @@ class MongoUserQuestionsModel(Document):
     mostTimeTaken: datetime.time = BaseField(db_field='most_time_taken')
 
     meta = {
-        'collections': 'user_questions'
+        'collection': 'user_questions'
     }

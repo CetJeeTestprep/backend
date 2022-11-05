@@ -1,6 +1,7 @@
 import datetime
 from flask_mongoengine import Document, BaseField
 
+
 class MongoQuestionPaperModel(Document):
 
     id: str = BaseField(db_field='id', required=True, primary_key=True)
@@ -19,5 +20,5 @@ class MongoQuestionPaperModel(Document):
     questions: list = BaseField(db_field='questions')
     duration: datetime.time = BaseField(db_field='duration')
     meta = {
-        'collections': 'question_papers'
+        'collection': 'question_papers'
     }
