@@ -1,6 +1,12 @@
 import string
 from pydantic import BaseModel
+from flask_mongoengine import Document, BaseField
+
+USER_TYPE_CHOICES = ['student', 'teacher']
+
 class UserModel(BaseModel):
+
+
     id: str
     name: str
     email: str
@@ -8,10 +14,10 @@ class UserModel(BaseModel):
     password: str
     
     #Student/Teacher
-    userType: str
+    userType: str = BaseField(db_field='user_type', choices=USER_TYPE_CHOICES)
 
     #keys - qpId, score, attempts
-    attemptedQuestionPapers: dict
+    attemptedQuestionPapers: dict = BaseField(db_field='attempted_question_paper')
 
     def toJson(self):
         return {
@@ -23,6 +29,9 @@ class UserModel(BaseModel):
             "user_type": self.userType,
             "attempted_question_papers": self.attemptedQuestionPapers
         }
+
+
+
 
 # class User(db.Document):
 #     id = db.StringField()

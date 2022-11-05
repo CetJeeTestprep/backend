@@ -1,21 +1,27 @@
-from flask import Flask, request
+from flask import Flask, request, render_template
 from flask_restful import Api, Resource, reqparse, abort
 from services.question_paper import QuestionPaperServices
 from flask_mongoengine import MongoEngine
 from services.user import UserServices
+from schema.mongo_model.mongo_user import MongoUserModel
 #from requests import request
 from config.parsers import classname_post_args
 
 app = Flask(__name__)
 
-database_name = "sakec_cet_db"
-DB_URI = "mongodb+srv://sakeccet:sakeccet@sakec-cet.zufjepd.mongodb.net/?retryWrites=true&w=majority"
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+database_name = "test"
+DB_URI = "mongodb+srv://sakeccettestprep:password_123@sakeccet.c0u0ayv.mongodb.net/?retryWrites=true&w=majority"
 
 app.config["MONGODB_HOST"] = DB_URI
 
 db = MongoEngine()
 db.init_app(app)
 api = Api(app)
+
 
 # classname_post_args = reqparse.RequestParser()
 # classname_post_args.add_argument("name", type=str, help="Name of the exam is required", required=True)
