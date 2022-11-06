@@ -12,12 +12,15 @@ class ResultServices(Resource):
     def __init__(self) -> None:
         super().__init__()
 
+    #get all results
     def get(self):
         return 200
 
+    #add results
     def post(self):
         return 202
 
+    #add results
     def put(self):
         return 201
 

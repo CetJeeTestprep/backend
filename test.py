@@ -17,6 +17,7 @@ from schema.mongo_model.mongo_user import MongoUserModel
 from schema.mongo_model.mongo_question_paper import MongoQuestionPaperModel
 from schema.mongo_model.mongo_users_questions import MongoUserQuestionsModel
 #from requests import request
+import datetime
 from config.parsers import classname_post_args
 
 app = Flask(__name__)
@@ -36,8 +37,16 @@ api = Api(app)
 # user.password = '123456'
 # user.save()
 #
-# questions = MongoQuestionPaperModel(id='0')
+# questions = MongoQuestionPaperModel(id='1')
 # questions.exam = 'CET'
+# questions.marksPerQuestion = 2
+# questions.date = datetime.datetime.now()
+# questions.difficulty = 2
+# questions.type = 'subject'
+# questions.maxAttempts = -1
+# questions.totalMarks = 40
+# questions.duration = 20
+# questions.questions = []
 # questions.save()
 #
 # user_question = MongoUserQuestionsModel(id='0-0')
@@ -45,6 +54,6 @@ api = Api(app)
 # user_question.questionId = '0'
 # user_question.save()
 
-user = MongoUserModel.objects(email='kashishmaru2001@gmail.com')
-print("USER COLLECTION:",user[0].to_json())
-print(type(user[0].to_json()))
+# user = MongoUserModel.objects(email='kashishmaru2001@gmail.com')
+# print("USER COLLECTION:",user[0].to_json())
+# print(type(user[0].to_json()))

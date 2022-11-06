@@ -6,6 +6,7 @@ from config.parsers import user_services_post_args
 import constants.urls as urls
 from flask_mongoengine import MongoEngine
 from schema.mongo_model.mongo_user import MongoUserModel
+import uuid
 #from requests import request
 
 BASE = urls.BASE
@@ -40,16 +41,20 @@ class UserServices(Resource):
         if(len(user_doc)!=0):
             abort(409, message="This user already exists.")
 
-        user = MongoUserModel(id='22')
+        user_id = str(uuid.uuid1())
+        user = MongoUserModel(id=user_id)
         user.name = args['name']
         user.email = args['email']
         user.password = args['password']
         user.phone = args['phone']
-        # user.userType = args['user_type']
-        # user.attemptedQuestionPapers = args['attempted_question_papers']
+        user.userType = args['user_type']
+        #user.attemptedQuestionPapers = args['attempted_question_papers']
         user.save()
         return {
-            'message': 'Signup successful!'
+            'message': 'Signup successful!',
+            'details': {
+                'id': user_id
+            }
         }, 201
 
     def delete(self):
@@ -74,7 +79,7 @@ class ParticularUserServices(Resource):
         if(len(user_doc)==0):
             abort(404, message="This user does not exist. Signup to create a new account.")
         if(user_doc[0]['password']!=args['password']):
-            return "Invalid password, try again."
+            return {'message':"Invalid password, try again."}
         return user_doc[0].to_json(), 202
 
     #signup
@@ -93,7 +98,9 @@ class ParticularUserServices(Resource):
         user.userType = args['user_type']
         user.attemptedQuestionPapers = args['attempted_question_papers']
         user.save()
-        return user, 201
+        return {
+            'message': 'Signup successful!'
+        }, 201
 
     def delete(self):
         return '', 204

@@ -18,7 +18,10 @@ class MongoQuestionPaperModel(Document):
     marksPerQuestion: int = BaseField(db_field='marks_per_question')
     totalMarks: int = BaseField(db_field='total_marks')
     questions: list = BaseField(db_field='questions')
-    duration: datetime.time = BaseField(db_field='duration')
+
+    #in minutes
+    duration: int = BaseField(db_field='duration')
+    
     meta = {
         'collection': 'question_papers'
     }
