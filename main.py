@@ -4,6 +4,7 @@ from services.question_paper import QuestionPaperServices
 from flask_mongoengine import MongoEngine
 from services.user import UserServices, ParticularUserServices
 from services.question_paper import QuestionPaperServices, ParticularQuestionPaperServices
+from services.question import ParticularQuestionServices
 from services.result import ResultServices
 from services.exam import ExamServices
 # from requests import request
@@ -68,6 +69,7 @@ api.add_resource(UserServices, "/users")
 api.add_resource(ParticularUserServices, "/users/<string:user_id>")
 api.add_resource(QuestionPaperServices, "/users/<string:user_id>/questionpapers/<int:selected_difficulty>")
 api.add_resource(ParticularQuestionPaperServices, "/users/<string:user_id>/questionpapers/<string:question_paper_id>")
+api.add_resource(ParticularQuestionServices, "/users/<string:user_id>/questionpapers/<string:question_paper_id>/questions/<string:question_id>")
 api.add_resource(ResultServices, "/users/<string:user_id>/questionpapers/results")
 api.add_resource(ExamServices, "/users/<string:user_id>/questionpapers/<string:question_paper_id>/attempting")
 
