@@ -1,7 +1,7 @@
 import datetime
-from flask_mongoengine import Document, BaseField
+from flask_mongoengine import Document, BaseField, MongoEngine
 
-
+db = MongoEngine()
 class MongoQuestionPaperModel(Document):
 
     id: str = BaseField(db_field='id', primary_key=True)

@@ -54,6 +54,9 @@ api = Api(app)
 # user_question.questionId = '0'
 # user_question.save()
 
+user_questions_doc = MongoUserQuestionsModel.objects()
+print("check:",user_questions_doc[0].userId)
+
 # user = MongoUserModel.objects(email='kashishmaru2001@gmail.com')
 # print("USER COLLECTION:",user[0].to_json())
 # print(type(user[0].to_json()))

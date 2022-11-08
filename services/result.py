@@ -22,6 +22,7 @@ class ResultServices(Resource):
 
     #add results
     def put(self):
+        
         return 201
 
     def delete(self):

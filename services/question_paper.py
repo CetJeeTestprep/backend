@@ -8,8 +8,14 @@ import uuid
 import pandas as pd
 from config.parsers import question_paper_services_post_args, particular_question_paper_services_post_args
 import random
+import json
 #from requests import request
 
+def convertListToJson(l):
+    d = {}
+    for i in range(len(l)):
+        d[i] = l[i]
+    return d
 class QuestionPaperServices(Resource):
 
     def __init__(self) -> None:
@@ -25,15 +31,18 @@ class QuestionPaperServices(Resource):
     def put(self, user_id, selected_difficulty):
 
         args = question_paper_services_post_args.parse_args()
+        this_user_id = user_id
 
-        user_doc = MongoUserModel.objects(id=user_id)
-        user_questions_doc = MongoUserQuestionsModel.objects(user_id=user_id)
+        # user_doc = MongoUserModel.objects(id=user_id)
+        user_questions_doc = MongoUserQuestionsModel.objects()
         has_attempted_questions = False
 
-        if(len(user_questions_doc)==0):
-            has_attempted_questions = True
+        for i in range(len(user_questions_doc)):
+            if(user_questions_doc[i].userId==this_user_id):
+                has_attempted_questions = True
+                break
 
-        question_dataset = pd.read_csv('../datasets/matrices_question')
+        question_dataset = pd.read_csv('../datasets/matrices_question.csv')
         qp_questions = []
         attempted_questions = []
         difficulty_score = 0
@@ -56,11 +65,14 @@ class QuestionPaperServices(Resource):
         if(len(tentative_selected_questions)==number_of_questions):
             final_selected_questions = tentative_selected_questions
         elif(len(tentative_selected_questions)<number_of_questions):
+            print("length is lesssssssss")
             final_selected_questions = tentative_selected_questions
             for i in range(number_of_questions - len(tentative_selected_questions)):
                 final_selected_questions.append(attempted_questions[i])
         else:
-            final_selected_questions = random.sample(tentative_selected_questions, number_of_questions)
+            print("length is moreeeeeeeeeeee SUBTYPE ARGS:", args['subtype'])
+            print("No of questions:",number_of_questions,"len:",tentative_selected_questions)
+            final_selected_questions = random.sample(tentative_selected_questions, int(number_of_questions))
 
         question_paper_id = str(uuid.uuid1())
         question_paper_doc = MongoQuestionPaperModel(id=question_paper_id)
@@ -72,13 +84,13 @@ class QuestionPaperServices(Resource):
         question_paper_doc.maxAttempts = -1
         question_paper_doc.totalMarks = args['marks']
         question_paper_doc.duration = args['duration']
-        question_paper_doc.questions = final_selected_questions
+        question_paper_doc.questions = str(final_selected_questions)
         question_paper_doc.save()
         return {
             'message': 'Question paper created!',
             'details': {
                 'id': question_paper_id,
-                'questions': final_selected_questions
+                'questions': str(final_selected_questions)
             }
         }, 201
 

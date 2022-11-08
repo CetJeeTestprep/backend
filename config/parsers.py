@@ -29,7 +29,7 @@ question_paper_services_post_args.add_argument("date", type=str, help="Date is m
 question_paper_services_post_args.add_argument("difficulty", type=int, help="Difficulty is missing")
 question_paper_services_post_args.add_argument("duration", type=int, help="Duration is missing")
 question_paper_services_post_args.add_argument("type", type=str, help="Type is missing")
-question_paper_services_post_args.add_argument("subtype", type=type, help="Subtype is missing")
+question_paper_services_post_args.add_argument("subtype", type=str, help="Subtype is missing")
 question_paper_services_post_args.add_argument("marks", type=int, help="Marks is missing")
 question_paper_services_post_args.add_argument("questions", type=list, help="Question list is missing")
 
