@@ -43,6 +43,7 @@ class QuestionPaperServices(Resource):
                 break
 
         question_dataset = pd.read_csv('../datasets/matrices_question.csv')
+        print("DATA:",question_dataset.columns)
         qp_questions = []
         attempted_questions = []
         difficulty_score = 0
@@ -54,7 +55,7 @@ class QuestionPaperServices(Resource):
 
         if(has_attempted_questions):
             for i in range(len(user_questions_doc)):
-                attempted_questions.append(user_questions_doc[i]['question_id'])
+                attempted_questions.append(user_questions_doc[i].questionId)
 
         tentative_selected_questions = []
         for i in range(len(qp_questions)):

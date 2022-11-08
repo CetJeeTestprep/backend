@@ -7,7 +7,7 @@
 # #response = requests.post(BASE + "helloworld/gre", {"name": "gre", "year":10})
 
 # print(response.json())
-
+import pandas as pd
 from flask import Flask, request
 from flask_restful import Api, Resource, reqparse, abort
 from services.question_paper import QuestionPaperServices
@@ -54,8 +54,11 @@ api = Api(app)
 # user_question.questionId = '0'
 # user_question.save()
 
-user_questions_doc = MongoUserQuestionsModel.objects()
-print("check:",user_questions_doc[0].userId)
+# user_questions_doc = MongoUserQuestionsModel.objects()
+# print("check:",user_questions_doc[0].userId)
+
+question_dataset = pd.read_csv('../datasets/matrices_question.csv')
+print("DATA:",question_dataset.columns)
 
 # user = MongoUserModel.objects(email='kashishmaru2001@gmail.com')
 # print("USER COLLECTION:",user[0].to_json())

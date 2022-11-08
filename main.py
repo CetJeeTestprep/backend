@@ -67,7 +67,7 @@ api.add_resource(HelloWorld, "/helloworld/<string:name>")
 
 api.add_resource(UserServices, "/users")
 api.add_resource(ParticularUserServices, "/users/<string:user_id>")
-api.add_resource(QuestionPaperServices, "/users/<string:user_id>/questionpapers/<int:selected_difficulty>")
+api.add_resource(QuestionPaperServices, "/users/<string:user_id>/newquestionpaper/<int:selected_difficulty>")
 api.add_resource(ParticularQuestionPaperServices, "/users/<string:user_id>/questionpapers/<string:question_paper_id>")
 api.add_resource(ParticularQuestionServices, "/users/<string:user_id>/questionpapers/<string:question_paper_id>/questions/<string:question_id>")
 api.add_resource(ResultServices, "/users/<string:user_id>/questionpapers/results")
