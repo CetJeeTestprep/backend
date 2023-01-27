@@ -43,7 +43,7 @@ class QuestionPaperServices(Resource):
                 break
 
         # question_dataset = pd.read_csv('../datasets/matrices_question.csv')
-        question_dataset = pd.read_csv('/etc/secrets/matrices_question.csv')
+        question_dataset = pd.read_csv('https://raw.githubusercontent.com/CetJeeTestprep/backend/main/datasets/matrices_question.csv')
         print("DATA:",question_dataset.columns)
         qp_questions = []
         attempted_questions = []
