@@ -57,9 +57,61 @@ api = Api(app)
 # user_questions_doc = MongoUserQuestionsModel.objects()
 # print("check:",user_questions_doc[0].userId)
 
-question_dataset = pd.read_csv('../datasets/matrices_question.csv')
-print("DATA:",question_dataset.columns)
+# question_dataset = pd.read_csv('../datasets/matrices_question.csv')
+# print("DATA:",question_dataset.columns)
 
-# user = MongoUserModel.objects(email='kashishmaru2001@gmail.com')
-# print("USER COLLECTION:",user[0].to_json())
+# user = MongoUserModel.objects(id='ba9bdb80-5dbb-11ed-83ee-646c802a23ae')
+# print("USER COLLECTION:",user[0].attemptedQuestionPapers==None)
 # print(type(user[0].to_json()))
+
+j = [
+    {
+        "question_paper_id": "614d0098-5f77-11ed-bed1-646c802a23ae",
+        "score": 100,
+        "difficulty": 2
+    },
+    {
+        "question_paper_id": "1631835c-5f4b-11ed-b40b-646c802a23ae",
+        "score": 56,
+        "difficulty": 3
+    },
+    {
+        "question_paper_id": "5ca4f2de-5f77-11ed-8558-646c802a23ae",
+        "score": 100,
+        "difficulty": 1
+    }
+]
+
+sj = str(j)
+
+def convertStringToListOfDict(sj):
+    length = len(sj)
+    sjNoL = sj[2:length-2]
+    print(sjNoL)
+    dictStrings = sjNoL.split(',')
+    dictList = []
+    for s in dictStrings:
+        print(s)
+        d = {}
+        sClean = s
+        print(sClean)
+        keyValList = sClean.split(',')
+        print(keyValList)
+        
+        for i in range(len(keyValList)):
+            kv = keyValList[i].split(': ')
+            key = kv[0][1:len(kv[0])-1]
+            value = kv[1][1:len(kv[1])-1]
+            print("KEY:",key)
+            print("VALUE:",value)
+            d[key] = value
+            print("-----------------------------------------------------")
+            print(d)
+            print("-----------------------------------------------------")
+
+        dictList.append(d)
+        print(dictList)
+        print("______________________________________________________")
+    return dictList
+
+convertStringToListOfDict(sj)

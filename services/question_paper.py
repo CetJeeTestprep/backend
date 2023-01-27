@@ -42,7 +42,8 @@ class QuestionPaperServices(Resource):
                 has_attempted_questions = True
                 break
 
-        question_dataset = pd.read_csv('../datasets/matrices_question.csv')
+        # question_dataset = pd.read_csv('../datasets/matrices_question.csv')
+        question_dataset = pd.read_csv('/etc/secrets/matrices_question.csv')
         print("DATA:",question_dataset.columns)
         qp_questions = []
         attempted_questions = []
@@ -66,12 +67,12 @@ class QuestionPaperServices(Resource):
         if(len(tentative_selected_questions)==number_of_questions):
             final_selected_questions = tentative_selected_questions
         elif(len(tentative_selected_questions)<number_of_questions):
-            print("length is lesssssssss")
+            #print("length is lesssssssss")
             final_selected_questions = tentative_selected_questions
             for i in range(number_of_questions - len(tentative_selected_questions)):
                 final_selected_questions.append(attempted_questions[i])
         else:
-            print("length is moreeeeeeeeeeee SUBTYPE ARGS:", args['subtype'])
+            #print("length is moreeeeeeeeeeee SUBTYPE ARGS:", args['subtype'])
             print("No of questions:",number_of_questions,"len:",tentative_selected_questions)
             final_selected_questions = random.sample(tentative_selected_questions, int(number_of_questions))
 
