@@ -44,9 +44,14 @@ particular_question_paper_services_post_args.add_argument("marks", type=int, hel
 particular_question_paper_services_post_args.add_argument("questions", type=list, help="Question list is missing")
 
 result_services_post_args = reqparse.RequestParser()
+result_services_post_args.add_argument("id", type=str, help="ID is required", required=True)
 result_services_post_args.add_argument("user_id", type=str, help="User ID is required", required=True)
 result_services_post_args.add_argument("question_paper_id", type=str, help="Question Paper ID is required", required=True)
-result_services_post_args.add_argument("score", type=int, help="Score is required", required=True)
+result_services_post_args.add_argument("final_score", type=int, help="Score is required", required=True)
+result_services_post_args.add_argument("total_possible_score", type=int, help="Total Score is missing")
+result_services_post_args.add_argument("question_wise_results", type=list, help="Questionwise result list is missing")
+result_services_post_args.add_argument("time_completed", type=str, help="Time completed is missing")
+result_services_post_args.add_argument("total_time_taken", type=int, help="Total time taken is missing") #in minutes
 
 exam_services_post_args = reqparse.RequestParser()
 exam_services_post_args.add_argument("user_id", type=str, help="User ID is required", required=True)
