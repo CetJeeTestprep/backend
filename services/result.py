@@ -1,3 +1,4 @@
+import uuid
 from flask import Flask, request
 from flask_restful import Api, Resource, reqparse, abort
 import requests
@@ -7,6 +8,17 @@ from schema.mongo_model.mongo_results import MongoResultsModel
 from config.parsers import question_paper_services_post_args, particular_question_paper_services_post_args, result_services_post_args
 
 BASE = urls.BASE
+
+def get_qwr_map(qwr_str):
+    fields = qwr_str.split(',')
+    qwr_map = {}
+    for field in fields:
+        temp = field.split(':')
+        if temp[0] not in ['initial_answer', 'final_answer']:
+            qwr_map[temp[0]] = int(temp[1])
+        else:
+            qwr_map[temp[0]] = temp[1]
+    return qwr_map
 class ResultServices(Resource):
 
     user_post_args = reqparse.RequestParser()
@@ -71,72 +83,65 @@ class ParticularResultServices(Resource):
         return 202
 
     #add results
-    def put(self, user_id):
+    def put(self, user_id,question_paper_id):
         args = result_services_post_args.parse_args()
-        this_user_id = user_id
+        this_user_id = user_id 
+        this_question_paper_id = question_paper_id
 
-        # user_doc = MongoUserModel.objects(id=user_id)
-        result_doc = MongoResultsModel.objects()
-        has_attempted_questions = False
+        confidence_score = 0
+        accuracy_score = 0
+        attempted_questions = 0
+        correctly_attempted_questions = 0
 
-        for i in range(len(user_questions_doc)):
-            if(user_questions_doc[i].userId==this_user_id):
-                has_attempted_questions = True
-                break
+        question_wise_results = args['question_wise_results'].split('##')
+        question_wise_results_list = []
 
-        # question_dataset = pd.read_csv('../datasets/matrices_question.csv')
-        question_dataset = pd.read_csv('https://raw.githubusercontent.com/CetJeeTestprep/backend/main/datasets/matrices_question.csv')
-        print("DATA:",question_dataset.columns)
-        qp_questions = []
-        attempted_questions = []
-        difficulty_score = 0
-        final_selected_questions = []
+        print("--------------------------------------------------")
+        print("QWR: ",question_wise_results)
+        print("--------------------------------------------------")
 
-        for i in range(len(question_dataset)):
-            if question_dataset['diff'][i]==selected_difficulty:
-                qp_questions.append(question_dataset['question_id'][i])
+        for qwr in question_wise_results:
 
-        if(has_attempted_questions):
-            for i in range(len(user_questions_doc)):
-                attempted_questions.append(user_questions_doc[i].questionId)
+            qres = get_qwr_map(qwr)
 
-        tentative_selected_questions = []
-        for i in range(len(qp_questions)):
-            if(qp_questions[i] not in attempted_questions):
-                tentative_selected_questions.append(qp_questions[i])
+            print("QRES IN RESULTS:",qres)
+            question_wise_results_list.append(qres)
+            
+            if(qres['attempt']!=-1):
+                attempted_questions += 1
+                if(qres['attempt']==1):
+                    correctly_attempted_questions += 1
+                    accuracy_score += 1
 
-        number_of_questions = args['marks']/2
-        if(len(tentative_selected_questions)==number_of_questions):
-            final_selected_questions = tentative_selected_questions
-        elif(len(tentative_selected_questions)<number_of_questions):
-            #print("length is lesssssssss")
-            final_selected_questions = tentative_selected_questions
-            for i in range(number_of_questions - len(tentative_selected_questions)):
-                final_selected_questions.append(attempted_questions[i])
-        else:
-            #print("length is moreeeeeeeeeeee SUBTYPE ARGS:", args['subtype'])
-            print("No of questions:",number_of_questions,"len:",tentative_selected_questions)
-            final_selected_questions = random.sample(tentative_selected_questions, int(number_of_questions))
+            if(qres['initial_answer']==qres['final_answer'] and qres['attempt']==1):
+                confidence_score += 1
 
-        question_paper_id = str(uuid.uuid1())
-        question_paper_doc = MongoQuestionPaperModel(id=question_paper_id)
-        question_paper_doc.exam = 'CET'
-        question_paper_doc.marksPerQuestion = 2
-        question_paper_doc.date = datetime.datetime.now()
-        question_paper_doc.difficulty = selected_difficulty
-        question_paper_doc.type = args['subtype']
-        question_paper_doc.maxAttempts = -1
-        question_paper_doc.totalMarks = args['marks']
-        question_paper_doc.duration = args['duration']
-        question_paper_doc.questions = str(final_selected_questions)
-        question_paper_doc.save()
+        accuracy_score = (accuracy_score/attempted_questions)*100
+        confidence_score = (confidence_score/correctly_attempted_questions)*100
+
+        result_id = str(uuid.uuid1())
+        result_doc = MongoResultsModel(id=result_id)
+        result_doc.id = result_id
+        result_doc.question_paper_id = this_question_paper_id
+        result_doc.user_id = this_user_id
+        result_doc.final_score  = args['final_score']
+        result_doc.total_possible_score = args['total_possible_score']
+        result_doc.question_wise_results = question_wise_results_list
+        result_doc.time_completed = args['time_completed']
+        result_doc.total_time_taken = args['total_time_taken']
+        result_doc.confidence_score = confidence_score
+        result_doc.accuracy_score = accuracy_score
+        result_doc.save()
         return {
             'message': 'Question paper created!',
             'details': {
-                'id': question_paper_id,
-                'questions': str(final_selected_questions)
+                'id': result_id,
+                'final_score': (args['final_score']/args['total_possible_score'])*100,
+                'confidence_score': confidence_score,
+                'accuracy_score': accuracy_score
             }
         }, 201
 
     def delete(self):
         return '', 204
+    

@@ -10,6 +10,8 @@ class MongoResultsModel(Document):
     question_wise_results: list = BaseField(db_field='question_wise_results')
     time_completed: datetime = BaseField(db_field='time_completed')
     total_time_taken: int = BaseField(db_field='total_time_taken')
+    confidence_score: float = BaseField(db_field='confidence_score')
+    accuracy_score: float = BaseField(db_field='accuracy_score')
 
     meta = {
         'collection': 'results'
