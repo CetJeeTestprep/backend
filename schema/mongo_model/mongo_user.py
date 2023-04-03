@@ -9,7 +9,7 @@ class MongoUserModel(Document):
     phone: str = BaseField(db_field='phone')
     password: str = BaseField(db_field='password')
     userType: str = BaseField(db_field='user_type', choices=USER_TYPE_CHOICES)    
-    attemptedQuestionPapers: dict = BaseField(db_field='attempted_question_paper')
+    attemptedQuestionPapers: str = BaseField(db_field='attempted_question_paper')
     confidence_score: float = BaseField(db_field='confidence_score')
     accuracy_score: float = BaseField(db_field='accuracy_score')
     strengths: str = BaseField(db_field='strengths')

@@ -30,17 +30,26 @@ class ResultServices(Resource):
     def get(self, user_id):
         message = "You have not attempted any tests yet."
         details = "None"
-        user_doc = MongoUserModel.objects(id=user_id)
-        if(len(user_doc)==0):
-            abort(404, message="This user id does not exist.")
+        results = []
+        results_for_user_doc = MongoResultsModel.objects(user_id=user_id)
+        if(len(results_for_user_doc)==0):
+            abort(404, message="No results yet.")
         else:
-            if(user_doc[0].attemptedQuestionPapers!=None):
-                message = "Results are as follows!"
-                details = user_doc[0].attemptedQuestionPapers
+            message = "Results are as follows!"
+
+            for i in range(len(results_for_user_doc)):
+                results.append(
+                    {
+                        'id': results_for_user_doc[i].id
+                    }
+                )
+            details = {
+                'results': results
+            }
                 
         return {
             'message': message,
-            'details': details
+            'details': str(details)
         }, 200
 
     #add specific question paper results
@@ -65,13 +74,22 @@ class ParticularResultServices(Resource):
     def get(self, user_id):
         message = "You have not attempted any tests yet."
         details = "None"
-        user_doc = MongoUserModel.objects(id=user_id)
-        if(len(user_doc)==0):
-            abort(404, message="This user id does not exist.")
+        results = []
+        results_for_user_doc = MongoResultsModel.objects(user_id=user_id)
+        if(len(results_for_user_doc)==0):
+            abort(404, message="No results yet.")
         else:
-            if(user_doc[0].attemptedQuestionPapers!=None):
-                message = "Results are as follows!"
-                details = user_doc[0].attemptedQuestionPapers
+            message = "Results are as follows!"
+
+            for i in range(len(results_for_user_doc)):
+                results.append(
+                    {
+                        'id': results_for_user_doc.id
+                    }
+                )
+            details = {
+
+            }
                 
         return {
             'message': message,
@@ -132,8 +150,39 @@ class ParticularResultServices(Resource):
         result_doc.confidence_score = confidence_score
         result_doc.accuracy_score = accuracy_score
         result_doc.save()
+
+        user_doc = MongoUserModel.objects.get_or_404(id=user_id)
+
+        past_qp_list = user_doc.attemptedQuestionPapers
+        if(past_qp_list!=None):
+            past_qp_list.append(result_id)
+        else:
+            past_qp_list = []
+            past_qp_list.append(result_id)
+
+        past_confidence_score = user_doc.confidence_score
+        past_accuracy_score = user_doc.accuracy_score
+        final_confidence_score = 0
+        final_accuracy_score = 0
+
+        if(past_confidence_score!=None):
+            final_confidence_score = (confidence_score + past_confidence_score)/2
+        else:
+            final_confidence_score = confidence_score
+
+        if(past_accuracy_score!=None):
+            final_accuracy_score = (accuracy_score + past_accuracy_score)/2
+        else:
+            final_accuracy_score = accuracy_score
+        
+        user_doc.attemptedQuestionPapers = past_qp_list
+
+        user_doc.update(confidence_score = final_confidence_score)
+        user_doc.update(accuracy_score = final_accuracy_score)
+        #user_doc.update(attempted_question_papers = str(past_qp_list))
+
         return {
-            'message': 'Question paper created!',
+            'message': 'Question paper result stored!',
             'details': {
                 'id': result_id,
                 'final_score': (args['final_score']/args['total_possible_score'])*100,
