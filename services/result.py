@@ -40,7 +40,16 @@ class ResultServices(Resource):
             for i in range(len(results_for_user_doc)):
                 results.append(
                     {
-                        'id': results_for_user_doc[i].id
+                        'id': results_for_user_doc[i].id,
+                        'question_paper_id': results_for_user_doc[i].question_paper_id,
+                        'user_id': results_for_user_doc[i].user_id,
+                        'final_score': results_for_user_doc[i].final_score,
+                        'total_possible_score': results_for_user_doc[i].total_possible_score,
+                        'question_wise_results': results_for_user_doc[i].question_wise_results,
+                        'time_completed': results_for_user_doc[i].time_completed,
+                        'total_time_taken': results_for_user_doc[i].total_time_taken,
+                        'confidence_score': results_for_user_doc[i].confidence_score,
+                        'accuracy_score': results_for_user_doc[i].accuracy_score
                     }
                 )
             details = {
