@@ -1,4 +1,5 @@
 import uuid
+import pandas as pd
 from flask import Flask, request
 from flask_restful import Api, Resource, reqparse, abort
 import requests
@@ -183,11 +184,47 @@ class ParticularResultServices(Resource):
             final_accuracy_score = (accuracy_score + past_accuracy_score)/2
         else:
             final_accuracy_score = accuracy_score
+
+        percent_score = args['final_score']/args['total_possible_score']
+        strengths = ""
+        weaknesses = ""
+
+        if(percent_score>=0.9 or percent_score<=0.35):
+            past_strengths = user_doc.strengths
+            past_weaknesses = user_doc.weaknesses
+
+            qid_for_topic = question_wise_results_list[0]['question_id']
+            qid_for_topic_str = 'question_id=='+str(qid_for_topic)
+            question_dataset = pd.read_csv('https://raw.githubusercontent.com/CetJeeTestprep/backend/main/datasets/matrices_question.csv')
+            topic = question_dataset.query(qid_for_topic_str)['topic'][qid_for_topic-1]
+
+            if(percent_score>=0.9):
+                if(past_strengths!=None):
+                    if topic not in past_strengths:
+                        strengths = past_strengths + topic + ', '
+                    if past_weaknesses!=None:
+                        if topic in past_weaknesses:
+                            weaknesses = past_weaknesses.replace(topic+', ','')
+                else:
+                    strengths = topic + ', '
+            
+            elif(percent_score<=0.35):
+                if(past_weaknesses!=None):
+                    if topic not in past_weaknesses:
+                        weaknesses = past_weaknesses + topic + ', '
+                    if past_strengths!=None:
+                        if topic in past_strengths:
+                            strengths = past_strengths.replace(topic+', ','')
+                else:
+                    weaknesses = topic + ', '
+
         
         user_doc.attemptedQuestionPapers = past_qp_list
 
         user_doc.update(confidence_score = final_confidence_score)
         user_doc.update(accuracy_score = final_accuracy_score)
+        user_doc.update(strengths = strengths)
+        user_doc.update(weaknesses = weaknesses)
         #user_doc.update(attempted_question_papers = str(past_qp_list))
 
         return {
@@ -196,7 +233,9 @@ class ParticularResultServices(Resource):
                 'id': result_id,
                 'final_score': (args['final_score']/args['total_possible_score'])*100,
                 'confidence_score': confidence_score,
-                'accuracy_score': accuracy_score
+                'accuracy_score': accuracy_score,
+                'strengths': strengths,
+                'weaknesses': weaknesses,
             }
         }, 201
 

@@ -105,7 +105,7 @@ class ParticularQuestionPaperServices(Resource):
         super().__init__()
 
     #get question paper details
-    def get(self, question_paper_id):
+    def get(self, user_id, question_paper_id):
         question_paper_doc = MongoQuestionPaperModel.objects(id=question_paper_id)
         if(len(question_paper_doc)==0):
             abort(404, message="This question paper does not exist.")
