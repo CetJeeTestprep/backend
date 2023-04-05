@@ -218,6 +218,10 @@ class ParticularResultServices(Resource):
                 else:
                     weaknesses = topic + ', '
 
+            else:
+                strengths = past_strengths
+                weaknesses = past_weaknesses
+
         
         user_doc.attemptedQuestionPapers = past_qp_list
 
