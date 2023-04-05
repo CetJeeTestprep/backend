@@ -26,13 +26,28 @@ class UserServices(Resource):
 
     #login
     def post(self):
+        print("HERE 1")
         args = user_services_post_args.parse_args()
         user_doc = MongoUserModel.objects(email=args['email'])
+        print("HERE 2")
         if(len(user_doc)==0):
             abort(404, message="This user does not exist. Signup to create a new account.")
         if(user_doc[0]['password']!=args['password']):
             return {'message':"Invalid password, try again."}
-        return user_doc[0].to_json(), 202
+        print("HERE 3")
+        return {
+            'message': 'Login successful!',
+            'details': {
+                'id': user_doc[0].id,
+                'name': user_doc[0].name,
+                'email': user_doc[0].email,
+                'phone': user_doc[0].phone,
+                'confidence_score': user_doc[0].confidence_score,
+                'accuracy_score': user_doc[0].accuracy_score,
+                'strengths': user_doc[0].strengths,
+                'weaknesses': user_doc[0].weaknesses
+            }
+        }, 202
 
     def put(self):
         args = user_services_post_args.parse_args()
@@ -41,20 +56,20 @@ class UserServices(Resource):
         if(len(user_doc)!=0):
             abort(409, message="This user already exists.")
 
-        user_id = str(uuid.uuid1())
-        user = MongoUserModel(id=user_id)
+        user = MongoUserModel()
         user.name = args['name']
         user.email = args['email']
         user.password = args['password']
         user.phone = args['phone']
         user.userType = args['user_type']
         #user.attemptedQuestionPapers = args['attempted_question_papers']
+        user.confidence_score = -1
+        user.accuracy_score = -1
+        user.strengths = ""
+        user.weaknesses = ""
         user.save()
         return {
-            'message': 'Signup successful!',
-            'details': {
-                'id': user_id
-            }
+            'message': 'Signup successful!'
         }, 201
 
     def delete(self):
@@ -74,13 +89,28 @@ class ParticularUserServices(Resource):
 
     #login
     def post(self):
+        print("HERE 1")
         args = user_services_post_args.parse_args()
         user_doc = MongoUserModel.objects(email=args['email'])
+        print("HERE 2")
         if(len(user_doc)==0):
             abort(404, message="This user does not exist. Signup to create a new account.")
         if(user_doc[0]['password']!=args['password']):
             return {'message':"Invalid password, try again."}
-        return user_doc[0].to_json(), 202
+        print("HERE 3")
+        return {
+            'message': 'Login successful!',
+            'details': {
+                'id': user_doc[0].id,
+                'name': user_doc[0].name,
+                'email': user_doc[0].email,
+                'phone': user_doc[0].phone,
+                'confidence_score': user_doc[0].confidence_score,
+                'accuracy_score': user_doc[0].accuracy_score,
+                'strengths': user_doc[0].strengths,
+                'weaknesses': user_doc[0].weaknesses
+            }
+        }, 202
 
     #signup
     def put(self):
@@ -96,7 +126,11 @@ class ParticularUserServices(Resource):
         user.password = args['password']
         user.phone = args['phone']
         user.userType = args['user_type']
-        user.attemptedQuestionPapers = args['attempted_question_papers']
+        #user.attemptedQuestionPapers = args['attempted_question_papers']
+        user.confidence_score = -1
+        user.accuracy_score = -1
+        user.strengths = ""
+        user.weaknesses = ""
         user.save()
         return {
             'message': 'Signup successful!'
