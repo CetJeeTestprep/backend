@@ -16,7 +16,7 @@ user_services_post_args.add_argument("user_type", type=str, help="Type is missin
 user_services_post_args.add_argument("attempted_question_papers", type=str, help="Json string for question paper attempts is missing")
 
 particular_user_services_post_args = reqparse.RequestParser()
-particular_user_services_post_args.add_argument("id", type=str, help="User Id is missing", required=True)
+particular_user_services_post_args.add_argument("id", type=str, help="User Id is missing")
 particular_user_services_post_args.add_argument("name", type=str, help="User name is missing", required=True)
 particular_user_services_post_args.add_argument("email", type=str, help="Email is missing")
 particular_user_services_post_args.add_argument("password", type=str, help="Password is missing")

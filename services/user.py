@@ -26,7 +26,7 @@ class UserServices(Resource):
 
     #login
     def post(self):
-        print("HERE 1")
+        print("HERE 11")
         args = user_services_post_args.parse_args()
         user_doc = MongoUserModel.objects(email=args['email'])
         print("HERE 2")
@@ -56,7 +56,9 @@ class UserServices(Resource):
         if(len(user_doc)!=0):
             abort(409, message="This user already exists.")
 
-        user = MongoUserModel()
+        user_id = str(uuid.uuid1())
+        user = MongoUserModel(id=user_id)
+        user.id = user_id
         user.name = args['name']
         user.email = args['email']
         user.password = args['password']
@@ -69,7 +71,7 @@ class UserServices(Resource):
         user.weaknesses = ""
         user.save()
         return {
-            'message': 'Signup successful!'
+            'message': 'Signup successful! Login to continue.'
         }, 201
 
     def delete(self):
@@ -120,7 +122,9 @@ class ParticularUserServices(Resource):
         if(len(user_doc)!=0):
             abort(409, message="This user already exists.")
 
-        user = MongoUserModel()
+        user_id = str(uuid.uuid1())
+        user = MongoUserModel(id=user_id)
+        user.id = user_id
         user.name = args['name']
         user.email = args['email']
         user.password = args['password']
