@@ -87,7 +87,19 @@ class ParticularUserServices(Resource):
         user_doc = MongoUserModel.objects(id=user_id)
         if(len(user_doc)==0):
             abort(404, message="This user id does not exist.")
-        return user_doc[0].to_json(), 200
+        return {
+            'message': 'Fetched user succesfully!',
+            'details': {
+                'id': user_doc[0].id,
+                'name': user_doc[0].name,
+                'email': user_doc[0].email,
+                'phone': user_doc[0].phone,
+                'confidence_score': user_doc[0].confidence_score,
+                'accuracy_score': user_doc[0].accuracy_score,
+                'strengths': user_doc[0].strengths,
+                'weaknesses': user_doc[0].weaknesses
+            }
+        }, 200
 
     #login
     def post(self):
