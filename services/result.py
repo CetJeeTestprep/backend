@@ -30,8 +30,7 @@ class ResultServices(Resource):
     #get all results
     def get(self, user_id):
         message = "You have not attempted any tests yet."
-        details = "None"
-        results = []
+        details = ""
         results_for_user_doc = MongoResultsModel.objects(user_id=user_id)
         if(len(results_for_user_doc)==0):
             abort(404, message="No results yet.")
@@ -39,27 +38,28 @@ class ResultServices(Resource):
             message = "Results are as follows!"
 
             for i in range(len(results_for_user_doc)):
-                results.append(
-                    {
-                        'id': results_for_user_doc[i].id,
-                        'question_paper_id': results_for_user_doc[i].question_paper_id,
-                        'user_id': results_for_user_doc[i].user_id,
-                        'final_score': results_for_user_doc[i].final_score,
-                        'total_possible_score': results_for_user_doc[i].total_possible_score,
-                        'question_wise_results': results_for_user_doc[i].question_wise_results,
-                        'time_completed': results_for_user_doc[i].time_completed,
-                        'total_time_taken': results_for_user_doc[i].total_time_taken,
-                        'confidence_score': results_for_user_doc[i].confidence_score,
-                        'accuracy_score': results_for_user_doc[i].accuracy_score
-                    }
-                )
-            details = {
-                'results': results
-            }
+                details = details+"##"+results_for_user_doc[i].id
+                # results.append(
+                #     {
+                #         'id': results_for_user_doc[i].id,
+                #         'question_paper_id': results_for_user_doc[i].question_paper_id,
+                #         'user_id': results_for_user_doc[i].user_id,
+                #         'final_score': results_for_user_doc[i].final_score,
+                #         'total_possible_score': results_for_user_doc[i].total_possible_score,
+                #         'question_wise_results': results_for_user_doc[i].question_wise_results,
+                #         'time_completed': results_for_user_doc[i].time_completed,
+                #         'total_time_taken': results_for_user_doc[i].total_time_taken,
+                #         'confidence_score': results_for_user_doc[i].confidence_score,
+                #         'accuracy_score': results_for_user_doc[i].accuracy_score
+                #     }
+                # )
+            # details = {
+            #     'results': results
+            # }
                 
         return {
             'message': message,
-            'details': str(details)
+            'details': details
         }, 200
 
     #add specific question paper results
@@ -81,11 +81,11 @@ class ParticularResultServices(Resource):
         super().__init__()
 
     #get all results
-    def get(self, user_id):
+    def get(self, user_id, question_paper_id):
         message = "You have not attempted any tests yet."
         details = "None"
         results = []
-        results_for_user_doc = MongoResultsModel.objects(user_id=user_id)
+        results_for_user_doc = MongoResultsModel.objects(question_paper_id=question_paper_id)
         if(len(results_for_user_doc)==0):
             abort(404, message="No results yet.")
         else:
@@ -94,12 +94,19 @@ class ParticularResultServices(Resource):
             for i in range(len(results_for_user_doc)):
                 results.append(
                     {
-                        'id': results_for_user_doc.id
+                        'id': results_for_user_doc[i].id,
+                        'question_paper_id': results_for_user_doc[i].question_paper_id,
+                        'user_id': results_for_user_doc[i].user_id,
+                        'final_score': results_for_user_doc[i].final_score,
+                        'total_possible_score': results_for_user_doc[i].total_possible_score,
+                        'question_wise_results': results_for_user_doc[i].question_wise_results,
+                        'time_completed': str(results_for_user_doc[i].time_completed),
+                        'total_time_taken': results_for_user_doc[i].total_time_taken,
+                        'confidence_score': results_for_user_doc[i].confidence_score,
+                        'accuracy_score': results_for_user_doc[i].accuracy_score
                     }
                 )
-            details = {
-
-            }
+            details = results
                 
         return {
             'message': message,
