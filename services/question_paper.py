@@ -109,7 +109,21 @@ class ParticularQuestionPaperServices(Resource):
         question_paper_doc = MongoQuestionPaperModel.objects(id=question_paper_id)
         if(len(question_paper_doc)==0):
             abort(404, message="This question paper does not exist.")
-        return question_paper_doc[0].to_json(), 200
+        return {
+            'message': 'Fetched user succesfully!',
+            'details': {
+                'id': question_paper_doc[0].id,
+                'date': str(question_paper_doc[0].date),
+                'difficulty': question_paper_doc[0].difficulty,
+                'exam': question_paper_doc[0].exam,
+                'type': question_paper_doc[0].type,
+                'max_attempts': question_paper_doc[0].maxAttempts,
+                'marks_per_question': question_paper_doc[0].marksPerQuestion,
+                'total_marks': question_paper_doc[0].totalMarks,
+                'questions': question_paper_doc[0].questions,
+                'duration': question_paper_doc[0].duration
+            }
+        }, 200
 
     def post(self, name):
         return name, 202
